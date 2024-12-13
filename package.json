@@ -1,0 +1,24 @@
+{
+  "name": "with-fastest-validator",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "fastest-validator": "^1.19.0"
+  },
+  "description": "<!--  Copyright (c) 2024 Anthony Mugendi",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "validate",
+    "methods",
+    "classes",
+    "functions",
+    "arguments"
+  ],
+  "author": "Anthony Mugendi <ngurumugz@gmail.com>",
+  "repository": "https://github.com/mugendi/with-fastest-validator.git"
+}
