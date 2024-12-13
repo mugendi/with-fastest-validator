@@ -1,10 +1,3 @@
-<!--
- Copyright (c) 2024 Anthony Mugendi
- 
- This software is released under the MIT License.
- https://opensource.org/licenses/MIT
--->
-
 # with-fastest-validator
 
 A lightweight wrapper around fastest-validator that provides automatic parameter validation, default values, and type checking for JavaScript functions with zero configuration.
@@ -175,7 +168,102 @@ const processPayment = withValidation({
 });
 ```
 
-## Class Method Usage
+## Class Usage
+
+### Validating Constructor Arguments
+
+You can validate class constructor arguments using two approaches:
+
+#### 1. Using a Base Validated Class (Recommended)
+
+```javascript
+// Base class to extend from
+class ValidatedClass {
+  constructor(validationSchema, ...args) {
+    const validate = withValidation(
+      validationSchema,
+      (...params) => params
+    );
+    return validate(...args);
+  }
+}
+
+// Your class extends ValidatedClass
+class User extends ValidatedClass {
+  constructor(username, email, options = {}) {
+    // Validate constructor arguments
+    const [validUsername, validEmail, validOptions] = super(
+      {
+        username: 'string|min:3|max:20',
+        email: 'email',
+        options: {
+          type: 'object',
+          default: {
+            isAdmin: false,
+            notifications: true,
+            language: 'en'
+          },
+          props: {
+            isAdmin: 'boolean|optional|default:false',
+            notifications: 'boolean|optional|default:true',
+            language: 'string|optional|default:en'
+          }
+        }
+      },
+      username,
+      email,
+      options
+    );
+
+    // Use validated values
+    this.username = validUsername;
+    this.email = validEmail;
+    this.options = validOptions;
+  }
+}
+
+// Usage
+const user = new User('john_doe', 'john@example.com', { isAdmin: true });
+```
+
+#### 2. Direct Validation in Constructor
+
+```javascript
+class Product {
+  constructor(name, price, metadata = {}) {
+    const validate = withValidation(
+      {
+        name: {
+          type: 'string',
+          min: 2,
+          pattern: /^[a-zA-Z0-9\s-]+$/
+        },
+        price: {
+          type: 'number',
+          positive: true,
+          precision: 2
+        },
+        metadata: {
+          type: 'object',
+          default: {
+            category: 'uncategorized',
+            inStock: true
+          }
+        }
+      },
+      (...params) => params
+    );
+    
+    const [validName, validPrice, validMetadata] = validate(name, price, metadata);
+    
+    this.name = validName;
+    this.price = validPrice;
+    this.metadata = validMetadata;
+  }
+}
+```
+
+### Validating Class Methods
 
 ```javascript
 class UserService {
